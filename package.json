@@ -1,0 +1,26 @@
+{
+  "name": "vite-docs-pt-br",
+  "version": "1.0.0",
+  "description": "Portuguese translation for vite documentation ",
+  "private": true,
+  "scripts": {
+    "docs": "./node_modules/vitepress/bin/vitepress.js dev",
+    "build": "vitepress build",
+    "serve": "vitepress serve"
+  },
+  "devDependencies": {
+    "chalk": "^4.1.2",
+    "vitepress": "0.15.6",
+    "yorkie": "^2.0.0"
+  },
+  "resolutions": {
+    "@vitejs/plugin-vue": "1.2.3",
+    "@vue/compiler-sfc": "3.1.1",
+    "@vue/server-renderer": "3.1.1",
+    "vite": "2.3.7",
+    "vue": "3.1.1"
+  },
+  "gitHooks": {
+    "commit-msg": "node scripts/verifyCommit.js"
+  }
+}
