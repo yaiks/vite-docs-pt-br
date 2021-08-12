@@ -1,50 +1,51 @@
-# Features
+# Funcionalidades
 
-At the very basic level, developing using Vite is not that much different from using a static file server. However, Vite provides many enhancements over native ESM imports to support various features that are typically seen in bundler-based setups.
+Num contexto mais simples, desenvolver usando Vite não é muito diferente de usar um servidor de arquivos estático. Entretanto, Vite oferece muitas melhorias sobre a importação de módulos _ESM_ nativo para dar suporte à diversas funcionalidades que geralmente são vistas em configurações de empacotadores.
 
-## NPM Dependency Resolving and Pre-Bundling
+## Resolvendo dependências do NPM e _Pré-Bundling_
 
-Native ES imports do not support bare module imports like the following:
+Importações nativas de ES (ECMAScript) não suportam o seguinte formato de importação:
 
 ```js
 import { someMethod } from 'my-dep'
 ```
 
-The above will throw an error in the browser. Vite will detect such bare module imports in all served source files and perform the following:
+O código acima irá lançar um erro no browser. Vite irá detectar esse tipo de importação em todos os arquivos da sua aplicação e performar o seguinte:
 
-1. [Pre-bundle](./dep-pre-bundling) them to improve page loading speed and convert CommonJS / UMD modules to ESM. The pre-bundling step is performed with [esbuild](http://esbuild.github.io/) and makes Vite's cold start time significantly faster than any JavaScript-based bundler.
+1. [Pré empacotar](./dep-pre-bundling) esses módulos para melhorar a velocidade de carregamento da página e converter _CommonJS_ / módulos _UMD_ para _ESM_. Esse passo de pré empacotar é feito com [esbuild](http://esbuild.github.io/) e torna o start inicial de Vite significantemente mais rápido do que qualquer empacotador baseado em Javascript.
 
-2. Rewrite the imports to valid URLs like `/node_modules/.vite/my-dep.js?v=f3sf2ebd` so that the browser can import them properly.
+2. Reescreve as importações para URLs válidas tipo `/node_modules/.vite/my-dep.js?v=f3sf2ebd`, para que os browsers possam importá-los corretamente.
 
-**Dependencies are Strongly Cached**
+**Dependencias são fortemente cacheadas**
 
-Vite caches dependency requests via HTTP headers, so if you wish to locally edit/debug a dependency, follow the steps [here](./dep-pre-bundling#browser-cache).
+Vite cacheia requisições de dependências via cabeçalhos HTTP, então se você deseja editar/debugar localmente uma dependência, siga os [seguintes](./dep-pre-bundling#browser-cache) passos.
 
-## Hot Module Replacement
+## _Hot Module Replacement_
 
-Vite provides an [HMR API](./api-hmr) over native ESM. Frameworks with HMR capabilities can leverage the API to provide instant, precise updates without reloading the page or blowing away application state. Vite provides first-party HMR integrations for [Vue Single File Components](https://github.com/vitejs/vite/tree/main/packages/plugin-vue) and [React Fast Refresh](https://github.com/vitejs/vite/tree/main/packages/plugin-react-refresh). There are also official integrations for Preact via [@prefresh/vite](https://github.com/JoviDeCroock/prefresh/tree/main/packages/vite).
+Vite oferece uma [API de HMR](./api-hmr) sobre _ESM_ nativo. Frameworks com capacidades de HMR podem tirar vantagem da API para prover atualizações instantâneas e precisas, sem necessidade de recarregar a página ou acabar com o estado local da aplicação. Vite oferece integrações de _HMR_ para [Vue Single File Components](https://github.com/vitejs/vite/tree/main/packages/plugin-vue) e [React Fast Refresh](https://github.com/vitejs/vite/tree/main/packages/plugin-react-refresh). Há também integrações oficiais para Preact através do [@prefresh/vite](https://github.com/JoviDeCroock/prefresh/tree/main/packages/vite).
 
-Note you don't need to manually set these up - when you [create an app via `create-vite`](./), the selected templates would have these pre-configured for you already.
+Note que você não precisa configurá-los manualmente - quando você [cria um app através do `create-vite`](./), o template selecionado já terá essas integrações pré-configuradas.
 
 ## TypeScript
 
-Vite supports importing `.ts` files out of the box.
+Vite suporta importações de arquivos `.ts` por padrão.
 
-Vite only performs transpilation on `.ts` files and does **NOT** perform type checking. It assumes type checking is taken care of by your IDE and build process (you can run `tsc --noEmit` in the build script or install `vue-tsc` and run `vue-tsc --noEmit` to also type check your `*.vue` files).
+Vite performa apenas transpilações em arquivos `.ts` e **NÃO** faz checagem de tipos. Ele assume que a checagem de tipos é papel da sua IDE e do processo de _build_ (você pode rodar `tsc --noEmit` no script de _build_ ou instalar `vue-tsc` e rodar `vue-tsc --noEmit` para checar seus arquivos `*.vue`).
 
-Vite uses [esbuild](https://github.com/evanw/esbuild) to transpile TypeScript into JavaScript which is about 20~30x faster than vanilla `tsc`, and HMR updates can reflect in the browser in under 50ms.
+Vite usa [esbuild](https://github.com/evanw/esbuild) para transpilar Typescript em Javascript, sendo que é 20~30x mais rápido que o `tsc` puro, e atualizações de _HMR_ podem refletir no browser em menos de 50ms.
 
-Note that because `esbuild` only performs transpilation without type information, it doesn't support certain features like const enum and implicit type-only imports. You must set `"isolatedModules": true` in your `tsconfig.json` under `compilerOptions` so that TS will warn you against the features that do not work with isolated transpilation.
+Já que `esbuild` performa apenas transpilação sem informação de tipos, ele não suporta certas funcionalidades como `const enum` e importações implícitas de tipagem.
+Você precisa definir `"isolatedModules": true` em seu `tsconfig.json` sobre `compilerOptions` para que o TS possa te avisar sobre funcionalidades que não executam com transpilação isolada.
 
-### Client Types
+### Tipagem de clientes
 
-Vite's default types are for its Node.js API. To shim the environment of client side code in a Vite application, add a `d.ts` declaration file:
+A tipagem padrão de Vite é para sua API em Node.js. Para interceptar o ambiente do lado do cliente em uma aplicação Vite, adicione um arquivo de declaração `d.ts`:
 
 ```typescript
 /// <reference types="vite/client" />
 ```
 
-Also, you can add `vite/client` to `compilerOptions.types` of your `tsconfig`:
+Voc6e também pode adicionar `vite/client` ao `compilerOptions.types` em seu `tsconfig`:
 
 ```json
 {
@@ -54,27 +55,27 @@ Also, you can add `vite/client` to `compilerOptions.types` of your `tsconfig`:
 }
 ```
 
-This will provide the following type shims:
+Isso irá prover os seguintes tipos de _shims_:
 
-- Asset imports (e.g. importing an `.svg` file)
-- Types for the Vite-injected [env variables](./env-and-mode#env-variables) on `import.meta.env`
-- Types for the [HMR API](./api-hmr) on `import.meta.hot`
+- Importação de _assets_ (ex. importando um arquivo `.svg`)
+- Tipagem para [variáveis de ambiente](./env-and-mode#env-variables) injetadas pelo Vite em `import.meta.env`
+- Tipagem para [API HMR](./api-hmr) em `import.meta.hot`
 
 ## Vue
 
-Vite provides first-class Vue support:
+Vite oferece suporte de primeira classe para Vue:
 
-- Vue 3 SFC support via [@vitejs/plugin-vue](https://github.com/vitejs/vite/tree/main/packages/plugin-vue)
-- Vue 3 JSX support via [@vitejs/plugin-vue-jsx](https://github.com/vitejs/vite/tree/main/packages/plugin-vue-jsx)
-- Vue 2 support via [underfin/vite-plugin-vue2](https://github.com/underfin/vite-plugin-vue2)
+- Suporte para Vue 3 SFC através de [@vitejs/plugin-vue](https://github.com/vitejs/vite/tree/main/packages/plugin-vue)
+- Suporte para Vue 3 JSX através de [@vitejs/plugin-vue-jsx](https://github.com/vitejs/vite/tree/main/packages/plugin-vue-jsx)
+- Suporte para Vue 2 através de [underfin/vite-plugin-vue2](https://github.com/underfin/vite-plugin-vue2)
 
 ## JSX
 
-`.jsx` and `.tsx` files are also supported out of the box. JSX transpilation is also handled via [esbuild](https://esbuild.github.io), and defaults to the React 16 flavor. React 17 style JSX support in esbuild is tracked [here](https://github.com/evanw/esbuild/issues/334).
+Arquivos `.jsx` e `.tsx` também são suportados por padrão. Transpilação de JSX também é feito através do [esbuild](https://esbuild.github.io), e o resultado padrão é o estilo de React 16. Suporte no esbuild para JSX no estilo de React 17 está sendo acompanhado [aqui](https://github.com/evanw/esbuild/issues/334).
 
-Vue users should use the official [@vitejs/plugin-vue-jsx](https://github.com/vitejs/vite/tree/main/packages/plugin-vue-jsx) plugin, which provides Vue 3 specific features including HMR, global component resolving, directives and slots.
+Usuários de Vue devem usar o plugin oficial [@vitejs/plugin-vue-jsx](https://github.com/vitejs/vite/tree/main/packages/plugin-vue-jsx), que oferece funcionalidades específicas do Vue 3 como HMR, resolução de componente global, diretivas e _slots_.
 
-If not using JSX with React or Vue, custom `jsxFactory` and `jsxFragment` can be configured using the [`esbuild` option](/config/#esbuild). For example for Preact:
+Se você não está usando JSX com React ou Vue, `jsxFactory` e `jsxFragment` customizados podem ser configurados usando a [opção `esbuild`](/config/#esbuild). Por exemplo para Preact:
 
 ```js
 // vite.config.js
@@ -86,9 +87,9 @@ export default defineConfig({
 })
 ```
 
-More details in [esbuild docs](https://esbuild.github.io/content-types/#jsx).
+Mais detalhes na [documentação do esbuild](https://esbuild.github.io/content-types/#jsx).
 
-You can inject the JSX helpers using `jsxInject` (which is a Vite-only option) to avoid manual imports:
+Você pode injetar os _helpers_ de JSX usando `jsxInject` (que é uma opção exclusiva do Vite) para evitar importações manuais:
 
 ```js
 // vite.config.js
