@@ -102,21 +102,21 @@ export default defineConfig({
 
 ## CSS
 
-Importing `.css` files will inject its content to the page via a `<style>` tag with HMR support. You can also retrieve the processed CSS as a string as the module's default export.
+Importar arquivos de `.css` irá injetar seu conteúdo na página via tag `<style>` com suporte para _HMR_. Você também pode acessar a string do CSS processado como o exportado padrão do módulo.
 
 ### `@import` Inlining and Rebasing
 
-Vite is pre-configured to support CSS `@import` inlining via `postcss-import`. Vite aliases are also respected for CSS `@import`. In addition, all CSS `url()` references, even if the imported files are in different directories, are always automatically rebased to ensure correctness.
+Vite é pré configurado para suportar CSS `@import` _inline_ através do `postcss-import`. Os diferentes _alias_ que o Vite pode atribuir ao `@import` também são respeitadas. Além disso, todas as referências ao CSS `url()`, mesmo se os arquivos importados estiverem em diretórios diferentes, são automaticamente interpretados para garantir assertividade.
 
-`@import` aliases and URL rebasing are also supported for Sass and Less files (see [CSS Pre-processors](#css-pre-processors)).
+As diferentes _alias_ de `@import` e interpretação de URL também são suportadas para arquivos SASS e LESS (veja [Pré-processadores de CSS](#css-pre-processors)).
 
 ### PostCSS
 
-If the project contains valid PostCSS config (any format supported by [postcss-load-config](https://github.com/postcss/postcss-load-config), e.g. `postcss.config.js`), it will be automatically applied to all imported CSS.
+Se o projeto contém uma configuração válida de PostCSS (qualquer formato suportado por [postcss-load-config](https://github.com/postcss/postcss-load-config), ex: `postcss.config.js`), ele será automaticamente aplicado à todas as importações de CSS.
 
 ### CSS Modules
 
-Any CSS file ending with `.module.css` is considered a [CSS modules file](https://github.com/css-modules/css-modules). Importing such a file will return the corresponding module object:
+Todo arquivo de CSS com prefixo `.module.css` é considerado um [arquivo CSS modules](https://github.com/css-modules/css-modules). Importar esse arquivo irá retornar o objeto do módulo correspondente:
 
 ```css
 /* example.module.css */
@@ -129,10 +129,9 @@ Any CSS file ending with `.module.css` is considered a [CSS modules file](https:
 import classes from './example.module.css'
 document.getElementById('foo').className = classes.red
 ```
+O comportamento do _CSS modules_ pode ser configurado via [opções de `css.modules`](/config/#css-modules).
 
-CSS modules behavior can be configured via the [`css.modules` option](/config/#css-modules).
-
-If `css.modules.localsConvention` is set to enable camelCase locals (e.g. `localsConvention: 'camelCaseOnly'`), you can also use named imports:
+Se `css.modules.localsConvention` for habilitada para receber `camelCase` (ex: `localsConvention: 'camelCaseOnly'`), você também pode usar importações nomeadas:
 
 ```js
 // .apply-color -> applyColor
@@ -140,11 +139,11 @@ import { applyColor } from './example.module.css'
 document.getElementById('foo').className = applyColor
 ```
 
-### CSS Pre-processors
+### Pré-processadores de CSS
 
-Because Vite targets modern browsers only, it is recommended to use native CSS variables with PostCSS plugins that implement CSSWG drafts (e.g. [postcss-nesting](https://github.com/jonathantneal/postcss-nesting)) and author plain, future-standards-compliant CSS.
+Como Vite apenas visa atingir browsers modernos, é recomendado usar variáveis de CSS nativo com plugins de PostCSS que implementam _CSSWG drafts_ (ex: [postcss-nesting](https://github.com/jonathantneal/postcss-nesting)) e CSS compatível com padrões futuros.
 
-That said, Vite does provide built-in support for `.scss`, `.sass`, `.less`, `.styl` and `.stylus` files. There is no need to install Vite-specific plugins for them, but the corresponding pre-processor itself must be installed:
+Dito isso, Vite também oferece suporte padrão para arquivos `.scss`, `.sass`, `.less`, `.styl` e `.stylus`. Não é necessário instalar plugins específicos para Vite, mas o pré-processador usado deve ser instalado:
 
 ```bash
 # .scss and .sass
@@ -157,46 +156,46 @@ npm install -D less
 npm install -D stylus
 ```
 
-If using Vue single file components, this also automatically enables `<style lang="sass">` et al.
+Se estiver usando _Vue SFC_, isso automaticamente habilita o uso de `<style lang="sass">` e etc.
 
-Vite improves `@import` resolving for Sass and Less so that Vite aliases are also respected. In addition, relative `url()` references inside imported Sass/Less files that are in different directories from the root file are also automatically rebased to ensure correctness.
+Vite aprimora a resolução de `@import` para Sass e Less, para que os `alias` do Vite sejam respeitadas. Além disso, referências à `url()` relativas dentro de arquivos Sass/Less importados que estão em diretórios diferentes da raíz são automaticamente interpretados para garantir assertividade.
 
-`@import` alias and url rebasing are not supported for Stylus due to its API constraints.
+`@import` _alias_ e interpretação de url não são suportados por Stylus devido às suas restrições de API.
 
-You can also use CSS modules combined with pre-processors by prepending `.module` to the file extension, for example `style.module.scss`.
+Você também pode usar CSS Modules combinado com pré-processadores ao colocar `.module` antes da extensão do arquivo, por exemplo `style.module.scss`.
 
-## Static Assets
+## Arquivos estáticos
 
-Importing a static asset will return the resolved public URL when it is served:
+Importar um arquivo estático irá retornar sua URL pública resolvida no momento em que for servida:
 
 ```js
 import imgUrl from './img.png'
 document.getElementById('hero-img').src = imgUrl
 ```
 
-Special queries can modify how assets are loaded:
+_Queries_ especiais podem modificar como os arquivos são carregados:
 
 ```js
-// Explicitly load assets as URL
+// Carregar os arquivos explicitamente como URL
 import assetAsURL from './asset.js?url'
 ```
 
 ```js
-// Load assets as strings
+// Carregar arquivos como strings
 import assetAsString from './shader.glsl?raw'
 ```
 
 ```js
-// Load Web Workers
+// Carregar web workers
 import Worker from './worker.js?worker'
 ```
 
 ```js
-// Web Workers inlined as base64 strings at build time
+// Web Workers inlined como strings base64 no momento do build
 import InlineWorker from './worker.js?worker&inline'
 ```
 
-More details in [Static Asset Handling](./assets).
+Mais detalhes em [Lidando com Arquivos Estáticos](./assets).
 
 ## JSON
 
