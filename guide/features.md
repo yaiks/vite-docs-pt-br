@@ -199,34 +199,33 @@ Mais detalhes em [Lidando com Arquivos Estáticos](./assets).
 
 ## JSON
 
-JSON files can be directly imported - named imports are also supported:
+Arquivos JSON podem ser diretamente importados - importações nomeadas também são suportadas:
 
 ```js
-// import the entire object
+// importar o objeto inteiro
 import json from './example.json'
-// import a root field as named exports - helps with treeshaking!
+// importar um campo específico como importação nomeada - ajuda o _treeshaking_!
 import { field } from './example.json'
 ```
+## Importação de Glob
 
-## Glob Import
-
-Vite supports importing multiple modules from the file system via the special `import.meta.glob` function:
+Vite suporta a importação de múltiplos módulos do sistema de arquivos através da função especial `import.meta.glob`:
 
 ```js
 const modules = import.meta.glob('./dir/*.js')
 ```
 
-The above will be transformed into the following:
+O trecho acima será transformado no seguinte:
 
 ```js
-// code produced by vite
+// código produzido pelo vite
 const modules = {
   './dir/foo.js': () => import('./dir/foo.js'),
   './dir/bar.js': () => import('./dir/bar.js')
 }
 ```
 
-You can then iterate over the keys of the `modules` object to access the corresponding modules:
+Você pode iterar entre as chaves do objeto `modules` para acessar os módulos correspondentes:
 
 ```js
 for (const path in modules) {
@@ -236,16 +235,16 @@ for (const path in modules) {
 }
 ```
 
-Matched files are by default lazy loaded via dynamic import and will be split into separate chunks during build. If you'd rather import all the modules directly (e.g. relying on side-effects in these modules to be applied first), you can use `import.meta.globEager` instead:
+Arquivos correspondentes são carregados com `lazy load` por padrão através de importações dinâmicas e serão separadas em diferentes `chunks` durante o _build_. Se você prefere importar todos os módulos diretamente (ex: dependendo da aplicação de side-effects desses módulos), você pode usar `import.meta.globEager`.
 
 ```js
 const modules = import.meta.globEager('./dir/*.js')
 ```
 
-The above will be transformed into the following:
+O trecho acima será transformado em:
 
 ```js
-// code produced by vite
+// código produzido pelo vite
 import * as __glob__0_0 from './dir/foo.js'
 import * as __glob__0_1 from './dir/bar.js'
 const modules = {
@@ -254,15 +253,15 @@ const modules = {
 }
 ```
 
-Note that:
+Note que:
 
-- This is a Vite-only feature and is not a web or ES standard.
-- The glob patterns are treated like import specifiers: they must be either relative (start with `./`) or absolute (start with `/`, resolved relative to project root).
-- The glob matching is done via `fast-glob` - check out its documentation for [supported glob patterns](https://github.com/mrmlnc/fast-glob#pattern-syntax).
+- Essa é uma funcionalidade específica do Vite e não um padrão da Web ou _ES_ (EcmaScript).
+- O pattern do glob é tratado como especificadores de importação: eles devem ser ou relativos (começando com `./`) ou absolutos (começando com `/`, resolvendo relativos à raíz do projeto)
+- A correspondência de glob é feita via `fast-glob` - veja a documentação para [patterns de glob suportados](https://github.com/mrmlnc/fast-glob#pattern-syntax).
 
 ## WebAssembly
 
-Pre-compiled `.wasm` files can be directly imported - the default export will be an initialization function that returns a Promise of the exports object of the wasm instance:
+Arquivos `.wasm` pré compilados podem ser importados diretamente - a exportação padrão será uma função inicializadora que retorna uma _Promise_ de objetos exportados da instância wasm:
 
 ```js
 import init from './example.wasm'
@@ -271,8 +270,7 @@ init().then((exports) => {
   exports.test()
 })
 ```
-
-The init function can also take the `imports` object which is passed along to `WebAssembly.instantiate` as its second argument:
+A função `init` também pode ter acesso ao objeto `imports` que é passado ao `WebAssembly.instantiate` como segundo argumento:
 
 ```js
 init({
@@ -286,11 +284,11 @@ init({
 })
 ```
 
-In the production build, `.wasm` files smaller than `assetInlineLimit` will be inlined as base64 strings. Otherwise, they will be copied to the dist directory as an asset and fetched on-demand.
+No _build_ de produção, arquivos `.wasm` menores que `assetInlineLimit` serão usados _inline_ como strings base64. Caso contrário, eles serão copiados para o diretório _dist_ como um arquivo e requisitados sob demanda.
 
 ## Web Workers
 
-A web worker script can be directly imported by appending `?worker` or `?sharedworker` to the import request. The default export will be a custom worker constructor:
+Um script web worker pode ser importado diretamente ao acrescentar `?worker` ou `?sharedworker` à requisição de importação. A exportação padrão será o construtor do worker customizado:
 
 ```js
 import MyWorker from './worker?worker'
@@ -298,44 +296,44 @@ import MyWorker from './worker?worker'
 const worker = new MyWorker()
 ```
 
-The worker script can also use `import` statements instead of `importScripts()` - note during dev this relies on browser native support and currently only works in Chrome, but for the production build it is compiled away.
+O script _worker_ também pode usar declarações de `import` ao invés de `importScripts()` - note que durante o ambiente de desenvolvimento isso fica à cargo do suporte nativo do browser e atualmente só funciona no Chrome, mas para _builds_ de produção é compilado normalmente.
 
-By default, the worker script will be emitted as a separate chunk in the production build. If you wish to inline the worker as base64 strings, add the `inline` query:
+Por padrão, o script _worker_ será emitido como um pedaço separado no _build_ de produção. Se você deseja usar o worker como uma string base64 _inline_, adicione a _query_ `inline`:
 
 ```js
 import MyWorker from './worker?worker&inline'
 ```
 
-## Build Optimizations
+## Otimizações de Build
 
-> Features listed below are automatically applied as part of the build process and there is no need for explicit configuration unless you want to disable them.
+> Funcionalidades listadas abaixo são automaticamente aplicadas como parte do processo de build e não há necessidade de configurações explícitas a menos que você queira desabilitá-las.
 
-### CSS Code Splitting
+### Separação de código CSS (_Code Splitting_)
 
-Vite automatically extracts the CSS used by modules in an async chunk and generates a separate file for it. The CSS file is automatically loaded via a `<link>` tag when the associated async chunk is loaded, and the async chunk is guaranteed to only be evaluated after the CSS is loaded to avoid [FOUC](https://en.wikipedia.org/wiki/Flash_of_unstyled_content#:~:text=A%20flash%20of%20unstyled%20content,before%20all%20information%20is%20retrieved.).
+Vite automaticamente extrai o CSS usado por módulos em um pedaço assíncrono e gera um arquivo separado para ele. O arquivo de CSS é automaticamente carregado através da tag `<link>` quando o pedaço assíncrono é requisitado, e este pedaço assíncrono só será interpretado após o CSS ser carregado, a fim de evitar [FOUC](https://en.wikipedia.org/wiki/Flash_of_unstyled_content#:~:text=A%20flash%20of%20unstyled%20content,before%20all%20information%20is%20retrieved.).
 
-If you'd rather have all the CSS extracted into a single file, you can disable CSS code splitting by setting [`build.cssCodeSplit`](/config/#build-csscodesplit) to `false`.
+Se você prefere ter todo o CSS extraído em um único arquivo, você pode disabilitar a separação de código CSS ao definir [`build.cssCodeSplit`](/config/#build-csscodesplit) para `false`.
 
-### Preload Directives Generation
+### Geração de Pre Carregamento de Diretivas
 
-Vite automatically generates `<link rel="modulepreload">` directives for entry chunks and their direct imports in the built HTML.
+Vite automaticamente gera diretivas `<link rel="modulepreload">` para pedaços definidos na entrada e suas importações diretas no HTML gerado.
 
-### Async Chunk Loading Optimization
+### Otimização do Carregamento de Pedaços Assíncronos
 
-In real world applications, Rollup often generates "common" chunks - code that is shared between two or more other chunks. Combined with dynamic imports, it is quite common to have the following scenario:
+Em aplicações reais, Rollup frequentemente gera pedaços _"common"_ - código que é compartilhado entre dois ou mais pedaços. Combinado com importações dinâmicas, é muito comum presenciar os seguintes cenários:
 
 ![graph](/images/graph.png)
 
-In the non-optimized scenarios, when async chunk `A` is imported, the browser will have to request and parse `A` before it can figure out that it also needs the common chunk `C`. This results in an extra network roundtrip:
+No cenário não otimizado, quando o pedaço assíncrono `A` é importado, o browser precisará requisitar e analisar `A` antes de descobrir que também precisa do pedaço `C`. Isso resulta em uma requisição de rede extra:
 
 ```
 Entry ---> A ---> C
 ```
 
-Vite automatically rewrites code-split dynamic import calls with a preload step so that when `A` is requested, `C` is fetched **in parallel**:
+Vite automaticamente reescreve chamadas de importação dinâmica de _code-split_ com um passo de pré carregamento, para que quando `A` for requisitado, `C` é requisitado **em paralelo**:
 
 ```
 Entry ---> (A + C)
 ```
 
-It is possible for `C` to have further imports, which will result in even more roundtrips in the un-optimized scenario. Vite's optimization will trace all the direct imports to completely eliminate the roundtrips regardless of import depth.
+É possível que `C` tenha outras importações, o que resultará em outras requisições extra de rede em um cenário não otimizado. A otimização do Vite irá reconhecer todas as importações diretas para eliminar completamente as requisições extra, não importando a profundidade de importações.
