@@ -179,61 +179,62 @@ Então, no `server.js` nós precisamos adicionar algumas lógicas específicas d
 
 Veja [Vue](https://github.com/vitejs/vite/tree/main/packages/playground/ssr-vue) e [React](https://github.com/vitejs/vite/tree/main/packages/playground/ssr-react) demos para configurações funcionais.
 
-## Generating Preload Directives
+## Gerando Diretivas Pré-Carregadas
 
-`vite build` supports the `--ssrManifest` flag which will generate `ssr-manifest.json` in build output directory:
+`vite build` suporta a opção `--ssrManifest` que irá gerar o arquivo `ssr-manifest.json` no diretório resultante do _build_:
 
 ```diff
 - "build:client": "vite build --outDir dist/client",
 + "build:client": "vite build --outDir dist/client --ssrManifest",
 ```
 
-The above script will now generate `dist/client/ssr-manifest.json` for the client build (Yes, the SSR manifest is generated from the client build because we want to map module IDs to client files). The manifest contains mappings of module IDs to their associated chunks and asset files.
+O script acima irá gerar `dist/client/ssr-manifest.json` para o _build_ do cliente (Sim, o manifest SSR é gerado a partir do build do cliente pois queremos mapear o ID do módulo com os arquivos do cliente). O manifesto contém o mapeamento de IDs de módulos com seus arquivos e pedaços associados.
 
-To leverage the manifest, frameworks need to provide a way to collect the module IDs of the components that were used during a server render call.
+Para se beneficiar do manifesto, frameworks precisam prover uma maneira de coletar os IDs dos módulos dos componentes que foram usados durante uma chamada no servidor.
 
-`@vitejs/plugin-vue` supports this out of the box and automatically registers used component module IDs on to the associated Vue SSR context:
+`@vitejs/plugin-vue` suporta essa funcionalidade por padrão e automaticamente registra IDs de módulos dos componentes usados ao contexto correto do Vue SSR:
 
 ```js
 // src/entry-server.js
 const ctx = {}
 const html = await vueServerRenderer.renderToString(app, ctx)
-// ctx.modules is now a Set of module IDs that were used during the render
+// ctx.modules agora é um Set de IDs de módulos que foram usados durante a renderização
 ```
 
-In the production branch of `server.js` we need to read and pass the manifest to the `render` function exported by `src/entry-server.js`. This would provide us with enough information to render preload directives for files used by async routes! See [demo source](https://github.com/vitejs/vite/blob/main/packages/playground/ssr-vue/src/entry-server.js) for full example.
+No _branch_ de produção de `server.js`, nós precisamos ler e passar o manifesto para a função `render` exportada por `src/entry-server.js`.
+Isso irá providenciar informações o suficiente para renderizar uma diretiva pré carregada para arquivos usados por rotas assíncronas! Veja [demo](https://github.com/vitejs/vite/blob/main/packages/playground/ssr-vue/src/entry-server.js) para um exemplo completo.
 
-## Pre-Rendering / SSG
+## Pré Renderização / SSG
 
-If the routes and the data needed for certain routes are known ahead of time, we can pre-render these routes into static HTML using the same logic as production SSR. This can also be considered a form of Static-Site Generation (SSG). See [demo pre-render script](https://github.com/vitejs/vite/blob/main/packages/playground/ssr-vue/prerender.js) for working example.
+Se as rotas e os dados necessários para certas rotas são conhecidas antecipadamente, nós podemos pré renderizar essa rotas em HTML estático usando a mesma lógica de SSR para produção. Isso também pode ser considerado uma forma de Geração de Sites Estáticos (SSG). Veja [demo de script de pré renderização](https://github.com/vitejs/vite/blob/main/packages/playground/ssr-vue/prerender.js) para um exemplo funcional.
 
-## SSR Externals
+## SSR Dependências Externas
 
-Many dependencies ship both ESM and CommonJS files. When running SSR, a dependency that provides CommonJS builds can be "externalized" from Vite's SSR transform / module system to speed up both dev and build. For example, instead of pulling in the pre-bundled ESM version of React and then transforming it back to be Node.js-compatible, it is more efficient to simply `require('react')` instead. It also greatly improves the speed of the SSR bundle build.
+Muitas dependências usam tanto arquivos ESM como CommonJS. Quando rodar SSR, a dependência que oferece um _build_ em CommonJS pode ser "externalizado" do sistema de transformação / módulos de SSR do Vite, para acelerar tanto dev quanto build. Por exemplo, ao invés de baixar a versão ESM pré empacotada de React e então transformá-la de volta em código compatível com NodeJS, é mais eficiente simplesmente `require('react')`. Isso também aumenta a velocidade do _build_ do pacote SSR.
 
-Vite performs automated SSR externalization based on the following heuristics:
+Vite performa a externalização de SSR automatizada baseada nas seguintes heurísticas:
 
-- If a dependency's resolved ESM entry point and its default Node entry point are different, its default Node entry is probably a CommonJS build that can be externalized. For example, `vue` will be automatically externalized because it ships both ESM and CommonJS builds.
+- Se um ponto de entrada de uma dependência ESM resolvida e seu ponto de entrada padrão em Node são diferentes, sua entrada padrão de Node é provavelmente um _build_ CommonJS que pode ser externalizado. Por exemplo, `vue` irá automaticamente externalizar pois gera tanto _builds_ ESM quanto CommonJS.
 
-- Otherwise, Vite will check whether the package's entry point contains valid ESM syntax - if not, the package is likely CommonJS and will be externalized. As an example, `react-dom` will be automatically externalized because it only specifies a single entry which is in CommonJS format.
+- Por outro lado, Vite irá checar caso o ponto de entrada do pacote contém sintaxe válida de ESM - se não, o pacote é provavelmente CommonJS e irá ser externalizado. Como exemplo, `react-dom` será automaticamente externalizado pois apenas especifica uma única entrada que está em formato CommonJS.
 
-If this heuristics leads to errors, you can manually adjust SSR externals using `ssr.external` and `ssr.noExternal` config options.
+Se estas heurísticas levam à erros, você pode manualmente ajustar essas configurações usando `ssr.external` e `ssr.noExternal`nas opções de configuração.
 
-In the future, this heuristics will likely improve to detect if the project has `type: "module"` enabled, so that Vite can also externalize dependencies that ship Node-compatible ESM builds by importing them via dynamic `import()` during SSR.
+No futuro, essas heurísticas irão ser aprimoradas para detectar se um projeto possui `type: module` habilitado, para que Vite possa externalizar dependêncuas que oferecem _builds_ ESM compatíveis com Node, importando-os durante SSR com `import()` dinâmico.
 
-:::warning Working with Aliases
-If you have configured aliases that redirects one package to another, you may want to alias the actual `node_modules` packages instead to make it work for SSR externalized dependencies. Both [Yarn](https://classic.yarnpkg.com/en/docs/cli/add/#toc-yarn-add-alias) and [pnpm](https://pnpm.js.org/en/aliases) support aliasing via the `npm:` prefix.
+:::warning Usando _aliases_
+Se você configurou _aliases_ que redirecionam um pacote para outro, talvez você queira _alias_ os pacotes atuais do `node_modules` ao invés de fazê-los funcionar para dependêncuas externalizadas de SSR. Tanto [Yarn](https://classic.yarnpkg.com/en/docs/cli/add/#toc-yarn-add-alias) e [pnpm](https://pnpm.js.org/en/aliases) suportam _aliasing_ através do prefixo `npm:`.
 :::
 
-## SSR-specific Plugin Logic
+## Lógica de Plugin específica para SSR
 
-Some frameworks such as Vue or Svelte compiles components into different formats based on client vs. SSR. To support conditional transforms, Vite passes an additional `ssr` argument to the following plugin hooks:
+Alguns frameworks como Vue ou Svelte compilam componentes em diferentes formatos baseados em cliente vs SSR. Para suportam transformações condicionais, Vite passa um argumento adicional `ssr` para o seguinte _hook_ de plugin:
 
 - `resolveId`
 - `load`
 - `transform`
 
-**Example:**
+**Exemplo:**
 
 ```js
 export function mySSRPlugin() {
@@ -241,13 +242,13 @@ export function mySSRPlugin() {
     name: 'my-ssr',
     transform(code, id, ssr) {
       if (ssr) {
-        // perform ssr-specific transform...
+        // performa transformações específicas de SSR...
       }
     }
   }
 }
 ```
 
-## SSR Target
+## Alvo SSR
 
-The default target for the SSR build is a node environment, but you can also run the server in a Web Worker. Packages entry resolution is different for each platform. You can configure the target to be Web Worker using the `ssr.target` set to `'webworker'`.
+O alvo padrão para _build_ SSR é um ambiente de node, mas você também pode rodar o servidor em um Web Worker. Resoluções de entrada de pacotes são diferentes para cada plataforma. Você pode configurar o alvo para Web Worker usando o `ssr.target` setado para `'webworker'`.
