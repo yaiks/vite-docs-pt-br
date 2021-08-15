@@ -10,15 +10,8 @@
   },
   "devDependencies": {
     "chalk": "^4.1.2",
-    "vitepress": "0.15.6",
+    "vitepress": "0.16.1",
     "yorkie": "^2.0.0"
-  },
-  "resolutions": {
-    "@vitejs/plugin-vue": "1.2.3",
-    "@vue/compiler-sfc": "3.1.1",
-    "@vue/server-renderer": "3.1.1",
-    "vite": "2.3.7",
-    "vue": "3.1.1"
   },
   "gitHooks": {
     "commit-msg": "node scripts/verifyCommit.js"
