@@ -1,11 +1,10 @@
-# Deploying a Static Site
+# Fazendo o deploy de um Site Estático
 
-The following guides are based on some shared assumptions:
+O guia irá assumir os seguintes aspectos:
 
-- You are using the default build output location (`dist`). This location [can be changed using `build.outDir`](https://vitejs.dev/config/#build-outdir), and you can extrapolate instructions from these guides in that case.
-- You are using npm. You can use equivalent commands to run the scripts if you are using Yarn or other package managers.
-- Vite is installed as a local dev dependency in your project, and you have setup the following npm scripts:
-
+- Você está usuando o destino de build padrão (`dist`). Esse destino [pode ser alterado usando `build.outDir`](https://vitejs.dev/config/#build-outdir), e você pode ignorar algumas instruções desse duia se for o caso.
+- Você está usando npm. Você pode usar comandos equivalentes para rodar os scripts caso esteja usando Yarn ou outro gerenciador de pacotes.
+- O Vite está instalado como uma dependencia local no seu projeto, e você já fez o setup com os seguintes scripts do npm:
 ```json
 {
   "scripts": {
@@ -15,34 +14,36 @@ The following guides are based on some shared assumptions:
 }
 ```
 
-It is important to note that `vite preview` is intended for previewing the build locally and not meant as a production server.
+É importante ressaltar que o comando `vite preview` é previsto para funcionar em seu ambiente local e não em produção.
 
-::: tip NOTE
-These guides provide instructions for performing a static deployment of your Vite site. Vite also has experimental support for Server Side Rendering. SSR refers to front-end frameworks that support running the same application in Node.js, pre-rendering it to HTML, and finally hydrating it on the client. Check out the [SSR Guide](./ssr) to learn about this feature. On the other hand, if you are looking for integration with traditional server-side frameworks, check out the [Backend Integration guide](./backend-integration) instead.
+::: tip NOTA
+Esse guia vai trazer instruções para realizar um deploy estático do seu site em Vite. Vite também possui um suporte experimental para Server SIde Rendering. SSR é um framework que suporta rodar em uma aplicação em Node.js, pré-renderizando o HTML e hidratando o conteúdo no cliente. Veja o [Guia de SSR](./ssr) para aprender sobre essa funcionalidade. Caso você esteja procurando por uma integração com frameworks de server-side, busque em  [Guia de Integração com Backend](./backend-integration).
+ On the other hand, if you are looking for integration with traditional server-side frameworks, check out the [Backend Integration guide](./backend-integration) instead.
 :::
 
-## Building The App
 
-You may run `npm run build` command to build the app.
+## Building a aplicação
+
+Você deve rodar o comando `npm run build` para buildar a aplicação.
 
 ```bash
 $ npm run build
 ```
 
-By default, the build output will be placed at `dist`. You may deploy this `dist` folder to any of your preferred platforms.
+Por padrão, o resultado do build será localizado na pasta `dist`. Você deve fazer o deploy da pasta `dist` para sua plataforma de escolha.
 
-### Testing The App Locally
+### Testando sua aplicação localmente
 
-Once you've built the app, you may test it locally by running `npm run preview` command.
+Uma vez que você já realizou o build do projeto, você deve testar ele localmente com o comando `npm run preview`.
 
 ```bash
 $ npm run build
 $ npm run preview
 ```
 
-The `preview` command will boot up local static web server that serves the files from `dist` at http://localhost:5000. It's an easy way to check if the production build looks OK in your local environment.
+O comando `preview` vai levantar um servidor web estático no seu local que irá servir os arquivos que estão na pasta `dist` em http://localhost:5000. É uma maneira fácil de verificar se está tudo ok com o seu build de produção no seu ambiente local.
 
-You may configure the port of the server py passing `--port` flag as an argument.
+Você pode configurar a porta do servidor passando a flag `--port` como argumento.
 
 ```json
 {
@@ -52,63 +53,63 @@ You may configure the port of the server py passing `--port` flag as an argument
 }
 ```
 
-Now the `preview` method will launch the server at http://localhost:8080.
+Agora o comando `preview` method vai rodar o servidor em http://localhost:8080.
 
 ## GitHub Pages
 
-1. Set the correct `base` in `vite.config.js`.
+1. Cofigure corretamente o campo `base` no arquivo `vite.config.js`.
 
-   If you are deploying to `https://<USERNAME>.github.io/`, you can omit `base` as it defaults to `'/'`.
+   Se você estiver fazendo o deploy para `https://<USERNAME>.github.io/`, você pode omiti o `base` que permanecerá por default como `'/'`.
 
-   If you are deploying to `https://<USERNAME>.github.io/<REPO>/`, for example your repository is at `https://github.com/<USERNAME>/<REPO>`, then set `base` to `'/<REPO>/'`.
+   Se você estiver fazendo o deploy para `https://<USERNAME>.github.io/<REPO>/`, por exemplo, seu repositório está em `https://github.com/<USERNAME>/<REPO>`, então configure o `base` para `'/<REPO>/'`.
 
-2. Inside your project, create `deploy.sh` with the following content (with highlighted lines uncommented appropriately), and run it to deploy:
+2. Dentro do seu projeto, crie o arquivo `deploy.sh` com o seguinte conteúdo (com as linhas demarcadas descomentadas apropriadamente), e execute para o deploy:
 
    ```bash{13,20,23}
    #!/usr/bin/env sh
 
-   # abort on errors
+   # Abortar em caso de erro
    set -e
 
    # build
    npm run build
 
-   # navigate into the build output directory
+   # Navegar para o diretório gerado pelo build
    cd dist
 
-   # if you are deploying to a custom domain
+   # se você estiver fazendo o deploy para um domínio customizado
    # echo 'www.example.com' > CNAME
 
    git init
    git add -A
    git commit -m 'deploy'
 
-   # if you are deploying to https://<USERNAME>.github.io
+   #  se você estiver fazendo o deploy para https://<USERNAME>.github.io
    # git push -f git@github.com:<USERNAME>/<USERNAME>.github.io.git master
 
-   # if you are deploying to https://<USERNAME>.github.io/<REPO>
+   #  se você estiver fazendo o deploy para https://<USERNAME>.github.io/<REPO>
    # git push -f git@github.com:<USERNAME>/<REPO>.git master:gh-pages
 
    cd -
    ```
 
-::: tip
-You can also run the above script in your CI setup to enable automatic deployment on each push.
+::: dica
+Você também pode rodar o script anterior na sua configuração de CI para um deploy automatizado a cada push.
 :::
 
-### GitHub Pages and Travis CI
+### GitHub Pages e Travis CI
 
-1. Set the correct `base` in `vite.config.js`.
+1. Cofigure corretamente o campo `base` no arquivo `vite.config.js`.
 
-   If you are deploying to `https://<USERNAME or GROUP>.github.io/`, you can omit `base` as it defaults to `'/'`.
+   Se você estiver fazendo o deploy para `https://<USERNAME>.github.io/`, você pode omiti o `base` que permanecerá por default como `'/'`.
 
-   If you are deploying to `https://<USERNAME or GROUP>.github.io/<REPO>/`, for example your repository is at `https://github.com/<USERNAME>/<REPO>`, then set `base` to `'/<REPO>/'`.
+   Se você estiver fazendo o deploy para `https://<USERNAME>.github.io/<REPO>/`, por exemplo, seu repositório está em `https://github.com/<USERNAME>/<REPO>`, então configure o `base` para `'/<REPO>/'`.
 
-2. Create a file named `.travis.yml` in the root of your project.
+2. Crie um arquivo chamado `.travis.yml` na raiz do seu projeto.
 
-3. Run `npm install` locally and commit the generated lockfile (`package-lock.json`).
+3. Execute `npm install` localmente e faço o commit do arquiivo de lock gerado (`package-lock.json`).
 
-4. Use the GitHub Pages deploy provider template, and follow the [Travis CI documentation](https://docs.travis-ci.com/user/deployment/pages/).
+4. Use o template de deploy do GitHub Pages, e siga os passos da [documentação do Travis CI](https://docs.travis-ci.com/user/deployment/pages/).
 
    ```yaml
    language: node_js
@@ -122,23 +123,23 @@ You can also run the above script in your CI setup to enable automatic deploymen
      provider: pages
      skip_cleanup: true
      local_dir: dist
-     # A token generated on GitHub allowing Travis to push code on you repository.
-     # Set in the Travis settings page of your repository, as a secure variable.
+     # Um token gerado no GitHub que permite o Travis de fazer o push do código no seu repositório.
+     # Defina na página de configurações do Travis no seu repositório, como uma variável segura.
      github_token: $GITHUB_TOKEN
      keep_history: true
      on:
        branch: master
    ```
 
-## GitLab Pages and GitLab CI
+## GitLab Pages e GitLab CI
 
-1. Set the correct `base` in `vite.config.js`.
+1. Cofigure corretamente o campo `base` no arquivo `vite.config.js`.
 
-   If you are deploying to `https://<USERNAME or GROUP>.gitlab.io/`, you can omit `base` as it defaults to `'/'`.
+   Se você estiver fazendo o deploy para `https://<USERNAME>.github.io/`, você pode omiti o `base` que permanecerá por default como `'/'`.
 
-   If you are deploying to `https://<USERNAME or GROUP>.gitlab.io/<REPO>/`, for example your repository is at `https://gitlab.com/<USERNAME>/<REPO>`, then set `base` to `'/<REPO>/'`.
+   Se você estiver fazendo o deploy para `https://<USERNAME>.github.io/<REPO>/`, por exemplo, seu repositório está em `https://github.com/<USERNAME>/<REPO>`, então configure o `base` para `'/<REPO>/'`.
 
-2. Create a file called `.gitlab-ci.yml` in the root of your project with the content below. This will build and deploy your site whenever you make changes to your content:
+2. Crie um arquivo chamado `.gitlab-ci.yml` na raíz do seu projeto com o seguinte conteúdo. Isso irá realizar o build e o  deploy do seu site toda vez que você fizer uma alteração no seu conteúdo:
 
    ```yaml
    image: node:16.5.0
@@ -164,18 +165,18 @@ You can also run the above script in your CI setup to enable automatic deploymen
 
 ## Netlify
 
-1. On [Netlify](https://netlify.com), setup up a new project from GitHub with the following settings:
+1. No [Netlify](https://netlify.com), configure um novo projeto do Github com os seguintes parâmetros:
 
    - **Build Command:** `vite build` or `npm run build`
    - **Publish directory:** `dist`
 
-2. Hit the deploy button.
+2. Aperte o botão de deploy.
 
 ## Google Firebase
 
-1. Make sure you have [firebase-tools](https://www.npmjs.com/package/firebase-tools) installed.
+1. Garanta que você tenha o [firebase-tools](https://www.npmjs.com/package/firebase-tools) instalado.
 
-2. Create `firebase.json` and `.firebaserc` at the root of your project with the following content:
+2. Crie os arquivos `firebase.json` e `.firebaserc` na raíz do seu projeto com o seguinte conteúdo:
 
    `firebase.json`:
 
@@ -198,31 +199,31 @@ You can also run the above script in your CI setup to enable automatic deploymen
    }
    ```
 
-3. After running `npm run build`, deploy using the command `firebase deploy`.
+3. Depois execute o comando `npm run build`, e faça o deploy usando o comando `firebase deploy`.
 
 ## Surge
 
-1. First install [surge](https://www.npmjs.com/package/surge), if you haven’t already.
+1. Primeiro instale o [surge](https://www.npmjs.com/package/surge), se você ainda não o tenha instalado.
 
-2. Run `npm run build`.
+2. Execute `npm run build`.
 
-3. Deploy to surge by typing `surge dist`.
+3. Faça o deploy para o Surge executando: `surge dist`.
 
-You can also deploy to a [custom domain](http://surge.sh/help/adding-a-custom-domain) by adding `surge dist yourdomain.com`.
+Você também pode realizar o deploy para um [domínio customizado](http://surge.sh/help/adding-a-custom-domain) adicionando `surge dist seudominio.com`.
 
 ## Heroku
 
-1. Install [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli).
+1. Instale [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli).
 
-2. Create a Heroku account by [signing up](https://signup.heroku.com).
+2. Cria uma conta no Heroku [signing up](https://signup.heroku.com).
 
-3. Run `heroku login` and fill in your Heroku credentials:
+3. Execute `heroku login` e preencha com suas credenciais do Heroku:
 
    ```bash
    $ heroku login
    ```
 
-4. Create a file called `static.json` in the root of your project with the below content:
+4. Crie um arquivo chamado `static.json` na raíz do seu projeto com o seguinte conteúdo:
 
    `static.json`:
 
@@ -232,9 +233,9 @@ You can also deploy to a [custom domain](http://surge.sh/help/adding-a-custom-do
    }
    ```
 
-   This is the configuration of your site; read more at [heroku-buildpack-static](https://github.com/heroku/heroku-buildpack-static).
+   Essa é a configuração do seu site; leia mais em [heroku-buildpack-static](https://github.com/heroku/heroku-buildpack-static).
 
-5. Set up your Heroku git remote:
+5. Configure o remote do Heroku no git:
 
    ```bash
    # version change
@@ -242,45 +243,45 @@ You can also deploy to a [custom domain](http://surge.sh/help/adding-a-custom-do
    $ git add .
    $ git commit -m "My site ready for deployment."
 
-   # creates a new app with a specified name
+   # cria um novo app com o nome passado
    $ heroku apps:create example
 
-   # set buildpack for static sites
+   # Define o buildpack para sites estáticos
    $ heroku buildpacks:set https://github.com/heroku/heroku-buildpack-static.git
    ```
 
-6. Deploy your site:
+6. Faça o deploy do seu site:
 
    ```bash
-   # publish site
+   # publique o site
    $ git push heroku master
 
-   # opens a browser to view the Dashboard version of Heroku CI
+   # abre o nvaegador para visualizar a Dashboard do Heroku CI
    $ heroku open
    ```
 
 ## Vercel
 
-To deploy your Vite app with a [Vercel for Git](https://vercel.com/docs/git), make sure it has been pushed to a Git repository.
+Para fazer o deploy da sua aplicação Vite com o [Vercel para Git](https://vercel.com/docs/git), garanta que você tenha realizado o push do seu projeto em um repositório git.
 
-Go to https://vercel.com/import/git and import the project into Vercel using your Git of choice (GitHub, GitLab or BitBucket). Follow the wizard to select the project root with the project's `package.json` and override the build step using `npm run build` and the output dir to be `./dist`
+Vá até https://vercel.com/import/git e importe o seu projeto no Vercel usando o Git de sua escolha (GitHub, GitLab or BitBucket). Siga a interface para selecionar o `package.json` na raíz do seu projeto e sobrescreva o passo de build usando o comando `npm run build` e o diretório de destino será o `./dist`
 
-![Override Vercel Configuration](../images/vercel-configuration.png)
+![Sobrescreva a configuração do Vercel](../images/vercel-configuration.png)
 
-After your project has been imported, all subsequent pushes to branches will generate Preview Deployments, and all changes made to the Production Branch (commonly "main") will result in a Production Deployment.
+Depois que o seu projeto for importado, todos os pushs que forem realizados irão gerar um Deploy Preview, e todas as mudanças na Branch de Produção (geralmente "main") irá resultar em um Deploy de Produção.
 
-Once deployed, you will get a URL to see your app live, such as the following: https://vite.vercel.app
+Uma vez realizado o deploy, você irá receber uma URL para visualizar sua aplicação online, como a seguinte: https://vite.vercel.app
 
 ## Azure Static Web Apps
 
-You can quickly deploy your Vite app with Microsoft Azure [Static Web Apps](https://aka.ms/staticwebapps) service. You need:
+Você pode rapidamente realizar o deploy da sua aplicação Vite com o serviço Microsoft Azure [Static Web Apps](https://aka.ms/staticwebapps). Você vai precisarÇ
 
-- An Azure account and a subscription key. You can create a [free Azure account here](https://azure.microsoft.com/free).
-- Your app code pushed to [GitHub](https://github.com).
-- The [SWA Extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurestaticwebapps) in [Visual Studio Code](https://code.visualstudio.com).
+- Uma conta Azure e uma subscription key. Você pode criar uma [conta Azure gratuita aqui](https://azure.microsoft.com/free). 
+- Sua aplicação hospedada no [GitHub](https://github.com).
+- A [Extensão SWA](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurestaticwebapps) no [Visual Studio Code](https://code.visualstudio.com).
 
-Install the extension in VS Code and navigate to your app root. Open the Static Web Apps extension, sign in to Azure, and click the '+' sign to create a new Static Web App. You will be prompted to designate which subscription key to use.
+Instale a extensão no VS Code e navegue até a raiz do seu projeto. Abra a extensão Static Web Apps, faça o login na Azure, e clique no '+' para criar um novo Static Web App. Você deverá selecionar a subscription key que será usada.
 
-Follow the wizard started by the extension to give your app a name, choose a framework preset, and designate the app root (usually `/`) and built file location `/dist`. The wizard will run and will create a GitHub action in your repo in a `.github` folder.
+Siga os passos iniciados pela extensão que você definiu o nome da aplicação, escolhe o framework predefinido, defina a raiz da aplicação (geralmente `/`) e aponte a localização dos arquivos de build `/dist`. Será executada e criada uma Github action no seu repositório com a pasta `.github`.
 
-The action will work to deploy your app (watch its progress in your repo's Actions tab) and, when successfully completed, you can view your app in the address provided in the extension's progress window by clicking the 'Browse Website' button that appears when the GitHub action has run.
+A Github Action irá trabalhar no deploy da sua aplicação (acompanhe o progresso na aba de Actions do seu repositório), e quando completa com sucesso, você pode visualizar o seu site no endereço configurado na extensão ao clicar no botão 'Browse Website' que irá aparecer quando a Github Action será executada.
