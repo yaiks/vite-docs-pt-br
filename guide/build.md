@@ -1,34 +1,34 @@
-# Building for Production
+# Exportando para Produção
 
-When it is time to deploy your app for production, simply run the `vite build` command. By default, it uses `<root>/index.html` as the build entry point, and produces an application bundle that is suitable to be served over a static hosting service. Check out the [Deploying a Static Site](./static-deploy) for guides about popular services.
+Quando chegar a hora de exportar seu aplicativo para produção, simplesmente execute o comando `vite build`. Por padrão, ele usa `<root>/index.html` como o ponto de entrada para o build e gera um bundle da aplicação que é adequado para ser servido por um serviço de hospedagem estática. Confira [Fazendo o deploy de um Site Estático](./static-deploy) para obter guias sobre serviços populares.
 
-## Browser Compatibility
+## Compatibilidade do Browser
 
-The production bundle assumes support for modern JavaScript. By default, vite targets browsers which support the [native ESM script tag](https://caniuse.com/es6-module) and [native ESM dynamic import](https://caniuse.com/es6-module-dynamic-import). As a reference, vite uses this [browserslist](https://github.com/browserslist/browserslist) query:
+O bundle de produção pressupõe suporte para JavaScript moderno. Por padrão, o vite visa navegadores que suportam a [tag de script nativa do ESM](https://caniuse.com/es6-module) e [importação dinâmica nativa do ESM](https://caniuse.com/es6-module-dynamic-import). Como referência, vite usa esta consulta [browserslist](https://github.com/browserslist/browserslist):
 
 ```
 defaults and supports es6-module and supports es6-module-dynamic-import, not opera > 0, not samsung > 0, not and_qq > 0
 ```
 
-You can specify custom targets via the [`build.target` config option](/config/#build-target), where the lowest target is `es2015`.
+Você pode especificar alvos personalizados por meio da [opção de configuração `build.target`](/config/#build-target), onde o alvo mais baixo é `es2015`.
 
-Note that by default, Vite only handles syntax transforms and **does not cover polyfills by default**. You can check out [Polyfill.io](https://polyfill.io/v3/) which is a service that automatically generates polyfill bundles based on the user's browser UserAgent string.
+Observe que, por padrão, o Vite lida apenas com transformações de sintaxe e **não cobre polyfills por padrão**. Você pode verificar em [Polyfill.io](https://polyfill.io/v3/), que é um serviço que gera pacotes polyfill automaticamente com base na string UserAgent do browser do usuário.
 
-Legacy browsers can be supported via [@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/main/packages/plugin-legacy), which will automatically generate legacy chunks and corresponding ES language feature polyfills. The legacy chunks are conditionally loaded only in browsers that do not have native ESM support.
+Browsers legados podem ser suportados por meio do [@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/main/packages/plugin-legacy), que irá gerar automaticamente chunks legados e polyfills de recursos correspondentes a linguagem ES. Os chunks legados são carregados condicionalmente apenas em navegadores que não têm suporte nativo a ESM.
 
-## Public Base Path
+## Caminho Base para a Public
 
-- Related: [Asset Handling](./assets)
+- Relacionado: [Manuseando os Assets Estáticos](./assets)
 
-If you are deploying your project under a nested public path, simply specify the [`base` config option](/config/#base) and all asset paths will be rewritten accordingly. This option can also be specified as a command line flag, e.g. `vite build --base=/my/public/path/`.
+Se você estiver compilando seu projeto em um caminho público aninhado, simplesmente especifique a [opção de configuração `base`](/config/#base) e todos os caminhos dos assets serão reescritos de acordo. Esta opção também pode ser especificada com uma flag por linha de comando, por exemplo, `vite build --base=/my/public/path/`.
 
-JS-imported asset URLs, CSS `url()` references, and asset references in your `.html` files are all automatically adjusted to respect this option during build.
+URLs de assets importados por JS, referências CSS `url()` e referências de assets em seus arquivos `.html` são todos ajustados automaticamente para respeitar esta opção durante a compilação.
 
-The exception is when you need to dynamically concatenate URLs on the fly. In this case, you can use the globally injected `import.meta.env.BASE_URL` variable which will be the public base path. Note this variable is statically replaced during build so it must appear exactly as-is (i.e. `import.meta.env['BASE_URL']` won't work).
+A exceção é quando você precisa concatenar URLs dinamicamente. Nesse caso, você pode usar a variável `import.meta.env.BASE_URL` injetada globalmente que será o caminho de base público. Observe que esta variável é substituída estaticamente durante a compilação, então ela deve aparecer exatamente como está (ou seja, `import.meta.env['BASE_URL']` não funcionará).
 
-## Customizing the Build
+## Personalizando o Build
 
-The build can be customized via various [build config options](/config/#build-options). Specifically, you can directly adjust the underlying [Rollup options](https://rollupjs.org/guide/en/#big-list-of-options) via `build.rollupOptions`:
+O build pode ser personalizado por meio de várias [opções de configuração de build](/config/#build-options). Especificamente, você pode ajustar diretamente as [opções de Rollup](https://rollupjs.org/guide/en/#big-list-of-options) subjacentes por meio de `build.rollupOptions`:
 
 ```js
 // vite.config.js
@@ -41,11 +41,11 @@ module.exports = defineConfig({
 })
 ```
 
-For example, you can specify multiple Rollup outputs with plugins that are only applied during build.
+Por exemplo, você pode especificar várias saídas de Rollup com plugins que são aplicados apenas durante a construção.
 
-## Rebuild on files changes
+## Reconstruir nas alterações dos arquivos
 
-You can enable rollup watcher with `vite build --watch`. Or, you can directly adjust the underlying [`WatcherOptions`](https://rollupjs.org/guide/en/#watch-options) via `build.watch`:
+Você pode habilitar o watcher de rollup com `vite build --watch`. Ou você pode ajustar diretamente as [`WatcherOptions`](https://rollupjs.org/guide/en/#watch-options) subjacentes via `build.watch`:
 
 ```js
 // vite.config.js
@@ -58,9 +58,9 @@ module.exports = defineConfig({
 })
 ```
 
-## Multi-Page App
+## App de várias páginas
 
-Suppose you have the following source code structure:
+Suponha que você tenha a seguinte estrutura de código-fonte:
 
 ```
 ├── package.json
@@ -72,9 +72,9 @@ Suppose you have the following source code structure:
     └── nested.js
 ```
 
-During dev, simply navigate or link to `/nested/` - it works as expected, just like for a normal static file server.
+Durante o desenvolvimento, simplesmente navegue ou crie um link para `/nested/` - funciona como esperado, como para um servidor de arquivos estático normal.
 
-During build, all you need to do is to specify multiple `.html` files as entry points:
+Durante a compilação, tudo que você precisa fazer é especificar vários arquivos `.html` como pontos de entrada:
 
 ```js
 // vite.config.js
@@ -93,13 +93,13 @@ module.exports = defineConfig({
 })
 ```
 
-If you specify a different root, remember that `__dirname` will still be the folder of your vite.config.js file when resolving the input paths. Therefore, you will need to add your `root` entry to the arguments for `resolve`.
+Se você especificar uma raiz diferente, lembre-se de que `__dirname` ainda será a pasta do seu arquivo vite.config.js ao resolver os caminhos de entrada. Portanto, você precisará adicionar sua entrada `root` aos argumentos para o `resolve`.
 
-## Library Mode
+## Modo Biblioteca
 
-When you are developing a browser-oriented library, you are likely spending most of the time on a test/demo page that imports your actual library. With Vite, you can use your `index.html` for that purpose to get the smooth development experience.
+Quando você está desenvolvendo uma biblioteca orientada para o browser, provavelmente passa a maior parte do tempo em uma página de teste/demo que importa sua biblioteca real. Com o Vite, você pode usar seu `index.html` para essa finalidade para obter uma experiência de desenvolvimento suave.
 
-When it is time to bundle your library for distribution, use the [`build.lib` config option](/config/#build-lib). Make sure to also externalize any dependencies that you do not want to bundle into your library, e.g. `vue` or `react`:
+Quando chegar a hora de compilar sua biblioteca para distribuição, use a [opção de configuração `build.lib`](/config/#build-lib). Certifique-se de também externalizar quaisquer dependências que você não deseja agrupar em sua biblioteca, por exemplo, `vue` ou `react`:
 
 ```js
 // vite.config.js
@@ -114,12 +114,12 @@ module.exports = defineConfig({
       fileName: (format) => `my-lib.${format}.js`
     },
     rollupOptions: {
-      // make sure to externalize deps that shouldn't be bundled
-      // into your library
+      // Certifique-se de externalizar dependências que não devem ser agrupadas
+      // em sua biblioteca
       external: ['vue'],
       output: {
-        // Provide global variables to use in the UMD build
-        // for externalized deps
+        // Fornece variáveis ​​globais para usar na construção UMD
+        // para dependências externalizadas
         globals: {
           vue: 'Vue'
         }
@@ -129,7 +129,7 @@ module.exports = defineConfig({
 })
 ```
 
-Running `vite build` with this config uses a Rollup preset that is oriented towards shipping libraries and produces two bundle formats: `es` and `umd` (configurable via `build.lib`):
+Ao executar `vite build` com esta configuração será usada uma predefinição de Rollup que é orientada para bibliotecas de remessa e produz dois formatos de pacote: `es` e `umd` (configurável via `build.lib`):
 
 ```
 $ vite build
@@ -138,7 +138,7 @@ building for production...
 [write] my-lib.umd.js 0.30kb, brotli: 0.16kb
 ```
 
-Recommended `package.json` for your lib:
+`Package.json` recomendado para sua biblioteca::
 
 ```json
 {
