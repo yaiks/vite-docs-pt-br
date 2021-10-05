@@ -1,23 +1,23 @@
-# Migration from v1
+# Migração da v1
 
-## Config Options Change
+## Mudança das opções de configuração
 
-- The following options have been removed and should be implemented via [plugins](./api-plugin):
+- As seguintes opções foram removidas e devem ser implementadas por meio de [plugins](./api-plugin):
 
   - `resolvers`
   - `transforms`
   - `indexHtmlTransforms`
 
-- `jsx` and `enableEsbuild` have been removed; Use the new [`esbuild`](/config/#esbuild) option instead.
+- `jsx` e `enableEsbuild` foram removidos; Use o novo [`esbuild`](/config/#esbuild) ao invés.
 
-- [CSS related options](/config/#css-modules) are now nested under `css`.
+- [CSS related options](/config/#css-modules) agora estão aninhadas em `css`.
 
-- All [build-specific options](/config/#build-options) are now nested under `build`.
+- Todas [build-specific options](/config/#build-options) agora estão aninhadas em `build`.
 
-  - `rollupInputOptions` and `rollupOutputOptions` are replaced by [`build.rollupOptions`](/config/#build-rollupoptions).
-  - `esbuildTarget` is now [`build.target`](/config/#build-target).
-  - `emitManifest` is now [`build.manifest`](/config/#build-manifest).
-  - The following build options have been removed since they can be achieved via plugin hooks or other options:
+  - `rollupInputOptions` e `rollupOutputOptions` são substituídos por [`build.rollupOptions`](/config/#build-rollupoptions).
+  - `esbuildTarget` agora é  [`build.target`](/config/#build-target).
+  - `emitManifest` agora é  [`build.manifest`](/config/#build-manifest).
+  - As seguintes opções de compilação foram removidas, uma vez que podem ser obtidas por meio de plugin hooks ou outras opções:
     - `entry`
     - `rollupDedupe`
     - `emitAssets`
@@ -25,31 +25,31 @@
     - `shouldPreload`
     - `configureBuild`
 
-- All [server-specific options](/config/#server-options) are now nested under
+- Todas [server-specific options](/config/#server-options) agora estão aninhadas em
   `server`.
 
-  - `hostname` is now [`server.host`](/config/#server-host).
-  - `httpsOptions` has been removed. [`server.https`](/config/#server-https) can directly accept the options object.
-  - `chokidarWatchOptions` is now [`server.watch`](/config/#server-watch).
+  - `hostname` agora é [`server.host`](/config/#server-host).
+  - `httpsOptions` foi removido. [`server.https`](/config/#server-https) pode aceitar diretamente o objeto de opções.
+  - `chokidarWatchOptions` agora é [`server.watch`](/config/#server-watch).
 
-- [`assetsInclude`](/config/#assetsInclude) now expects `string | RegExp | (string | RegExp)[]` instead of a function.
+- [`assetsInclude`](/config/#assetsInclude) agora espera `string | RegExp | (string | RegExp)[]` em vez de uma função.
 
-- All Vue specific options are removed; Pass options to the Vue plugin instead.
+- Todas as opções específicas do Vue são removidas; Passe as opções para o plug-in do Vue.
 
-## Alias Behavior Change
+## Mudança de comportamento de alias
 
-[`alias`](/config/#alias) is now being passed to `@rollup/plugin-alias` and no longer require start/ending slashes. The behavior is now a direct replacement, so 1.0-style directory alias key should remove the ending slash:
+[`alias`](/config/#alias) agora está sendo passado para `@rollup/plugin-alias` e não requer mais barras de início / fim. O comportamento agora é uma substituição direta, portanto, a chave de alias de diretório no estilo 1.0 deve remover a barra final:
 
 ```diff
 - alias: { '/@foo/': path.resolve(__dirname, 'some-special-dir') }
 + alias: { '/@foo': path.resolve(__dirname, 'some-special-dir') }
 ```
 
-Alternatively, you can use the `[{ find: RegExp, replacement: string }]` option format for more precise control.
+Como alternativa, você pode usar o `[{ find: RegExp, replacement: string }]` formato de opção para um controle mais preciso.
 
-## Vue Support
+## Suporte Vue 
 
-Vite 2.0 core is now framework agnostic. Vue support is now provided via [`@vitejs/plugin-vue`](https://github.com/vitejs/vite/tree/main/packages/plugin-vue). Simply install it and add it in the Vite config:
+O core do Vite 2.0 agora é independente de estrutura. O suporte Vue agora é fornecido via [`@vitejs/plugin-vue`](https://github.com/vitejs/vite/tree/main/packages/plugin-vue). Basta instalá-lo e adicioná-lo na configuração do Vite:
 
 ```js
 import vue from '@vitejs/plugin-vue'
@@ -60,9 +60,9 @@ export default defineConfig({
 })
 ```
 
-### Custom Blocks Transforms
+### Transformações de blocos personalizados
 
-A custom plugin can be used to transform Vue custom blocks like the one below:
+Um plug-in personalizado pode ser usado para transformar blocos personalizados do Vue como o mostrado abaixo:
 
 ```ts
 // vite.config.js
@@ -89,17 +89,17 @@ export default defineConfig({
 })
 ```
 
-## React Support
+## Suporte React 
 
-React Fast Refresh support is now provided via [`@vitejs/plugin-react-refresh`](https://github.com/vitejs/vite/tree/main/packages/plugin-react-refresh).
+O suporte React Fast Refresh agora é fornecido via [`@vitejs/plugin-react-refresh`](https://github.com/vitejs/vite/tree/main/packages/plugin-react-refresh).
 
-## HMR API Change
+## Alteração de API HMR
 
-`import.meta.hot.acceptDeps()` have been deprecated. [`import.meta.hot.accept()`](./api-hmr#hot-accept-deps-cb) can now accept single or multiple deps.
+`import.meta.hot.acceptDeps()` foram descontinuados. [`import.meta.hot.accept()`](./api-hmr#hot-accept-deps-cb) agora pode aceitar dependências únicas ou múltiplas.
 
-## Manifest Format Change
+## Mudança do formato do Manifest
 
-The build manifest now uses the following format:
+O manifesto de construção agora usa o seguinte formato:
 
 ```json
 {
@@ -116,18 +116,18 @@ The build manifest now uses the following format:
 }
 ```
 
-For entry JS chunks, it also lists its imported chunks which can be used to render preload directives.
+Para os JS chunks de entrada, ele também lista seus chunks importados que podem ser usados para renderizar diretivas de pré-carregamento.
 
-## For Plugin Authors
+## Para Autores de Plugin
 
-Vite 2 uses a completely redesigned plugin interface which extends Rollup plugins. Please read the new [Plugin Development Guide](./api-plugin).
+O Vite 2 usa uma interface de plug-in completamente redesenhada que estende os plug-ins Rollup. Leia o novo [Plugin Development Guide](./api-plugin).
 
-Some general pointers on migrating a v1 plugin to v2:
+Algumas dicas gerais sobre a migração de um plug-in v1 para v2:
 
-- `resolvers` -> use the [`resolveId`](https://rollupjs.org/guide/en/#resolveid) hook
-- `transforms` -> use the [`transform`](https://rollupjs.org/guide/en/#transform) hook
-- `indexHtmlTransforms` -> use the [`transformIndexHtml`](./api-plugin#transformindexhtml) hook
+- `resolvers` -> use o [`resolveId`](https://rollupjs.org/guide/en/#resolveid) hook
+- `transforms` -> use o [`transform`](https://rollupjs.org/guide/en/#transform) hook
+- `indexHtmlTransforms` -> use o [`transformIndexHtml`](./api-plugin#transformindexhtml) hook
 - Serving virtual files -> use [`resolveId`](https://rollupjs.org/guide/en/#resolveid) + [`load`](https://rollupjs.org/guide/en/#load) hooks
-- Adding `alias`, `define` or other config options -> use the [`config`](./api-plugin#config) hook
+- Adicionando `alias`, `define` ou outras opções de configuração -> use o [`config`](./api-plugin#config) hook
 
-Since most of the logic should be done via plugin hooks instead of middlewares, the need for middlewares is greatly reduced. The internal server app is now a good old [connect](https://github.com/senchalabs/connect) instance instead of Koa.
+Uma vez que a maior parte da lógica deve ser feita por meio de plugin hooks em vez de middlewares, a necessidade de middlewares é bastante reduzida. O aplicativo de servidor interno agora é uma boa e velha instância de [connect](https://github.com/senchalabs/connect) en vez de Koa.
