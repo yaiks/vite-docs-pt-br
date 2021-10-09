@@ -332,7 +332,7 @@ export default defineConfig(async ({ command, mode }) => {
 
   O diretório a partir do qual os arquivos `.env` são carregados. Pode ser um caminho absoluto ou relativo à raiz do projeto.
 
-  Consulte [aqui](/guide/env-and-mode#env-files) para mais informações sobre arquivos de ambiente.
+  Consulte [aqui](/guide/env-and-mode#arquivos-env) para mais informações sobre arquivos de ambiente.
 
 ## Server Options
 
