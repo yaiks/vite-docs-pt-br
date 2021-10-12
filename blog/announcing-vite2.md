@@ -5,7 +5,7 @@ sidebar: false
 # Announcing Vite 2.0
 
 <p style="text-align:center">
-  <img src="/logo.svg" style="height:200px">
+  <img src="../images/logo.svg" style="height:200px">
 </p>
 
 Today we are excited to announce the official release of Vite 2.0!
