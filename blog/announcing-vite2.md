@@ -52,11 +52,11 @@ O Vite SSR é fornecido como um recurso de baixo nível e esperamos ver framewor
 
 ### Suporte para navegador Opt-in Legacy
 
-O Vite se destina a navegadores modernos com suporte a ESM nativo por padrão, mas você também pode optar por oferecer suporte a navegadores legacy por meio do [@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/main/packages/plugin-legacy). O plugin gera automaticamente pacotes duplos modern/legacy e oferece o pacote certo com base na detecção de recursos do navegador, garantindo um código mais eficiente em navegadores modernos que os suportam.
+O Vite se destina a navegadores modernos com suporte a ESM nativo por padrão, mas você também pode optar por oferecer suporte a navegadores legacy por meio do [@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/main/packages/plugin-legacy). O plugin gera automaticamente pacotes duplos moderno/legacy e oferece o pacote certo com base na detecção de recursos do navegador, garantindo um código mais eficiente em navegadores modernos que os suportam.
 
 ## De uma Chance!
 
-Eram muitos recursos, mas começar com o Vite é simples! Você pode ativar um aplicativo com tecnologia Vite literalmente em um minuto, começando com o seguinte comando (certifique-se de ter Node.js >=12):
+São muitos recursos, mas começar com o Vite é simples! Você pode ativar um aplicativo com tecnologia Vite literalmente em um minuto, começando com o seguinte comando (certifique-se de ter Node.js >=12):
 
 ```bash
 npm init @vitejs/app
