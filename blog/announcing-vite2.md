@@ -38,28 +38,28 @@ Como o Vite é um servidor de desenvolvimento ESM nativo, ele pré-agrupa depend
 
 ### Suporte CSS de primeira classe
 
-Vite trata o CSS como um cidadão de primeira classe do gráfico do módulo e oferece os seguintes suportes:
+Vite trata o CSS como um cidadão de primeira classe de module graph e apoia as seguintes linhas de pensamentos fora da caixa :
 
-- **Resolver enhancement**: `@import` and `url()` paths in CSS are enhanced with Vite's resolver to respect aliases and npm dependencies.
-- **URL rebasing**: `url()` paths are automatically rebased regardless of where the file is imported from.
-- **CSS code splitting**: a code-split JS chunk also emits a corresponding CSS file, which is automatically loaded in parallel with the JS chunk when requested.
+- **Solucionador do aprimoramento**: Os caminhos `@import` e `url()` em CSS, são aprimorados com o solucionador do Vite respeitando apelidos e dependências do npm.
+- **Realocamento de URL**: `url()` os caminhos são realocados automaticamente, independentemente de onde o arquivo é importado.
+- **Particionando um código CSS**: Um JS chunk fragmentado por código também emite um arquivo CSS correspondente, que é carregado automaticamente em paralelo com o JS chunk quando solicitado.
 
-### Server-Side Rendering (SSR) Support
+### Suporte de renderização do lado do servidor (SSR)
 
-Vite 2.0 ships with [experimental SSR support](https://vitejs.dev/guide/ssr.html). Vite provides APIs to efficiently load and update ESM-based source code in Node.js during development (almost like server-side HMR), and automatically externalizes CommonJS-compatible dependencies to improve development and SSR build speed. The production server can be completely decoupled from Vite, and the same setup can be easily adapted to perform pre-rendering / SSG.
+O Vite 2.0 é fornecido com [suporte a SSR experimental](https://vitejs.dev/guide/ssr.html). O Vite fornece APIs para carregar e atualizar com eficiência o código-fonte baseado em ESM no Node.js durante o desenvolvimento (quase como HMR do lado do servidor) e externaliza automaticamente as dependências compatíveis com CommonJS para melhorar o desenvolvimento e a velocidade de construção SSR. O servidor de produção pode ser completamente desacoplado do Vite, e a mesma configuração pode ser facilmente adaptada para realizar pré-renderização / SSG.
 
-Vite SSR is provided as a low-level feature and we are expecting to see higher level frameworks leveraging it under the hood.
+O Vite SSR é fornecido como um recurso de baixo nível e esperamos ver frameworks de alto nível aproveitando-o sob o capô.
 
-### Opt-in Legacy Browser Support
+### Suporte para navegador Opt-in Legacy
 
-Vite targets modern browsers with native ESM support by default, but you can also opt-in to support legacy browsers via the official [@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/main/packages/plugin-legacy). The plugin automatically generates dual modern/legacy bundles, and delivers the right bundle based on browser feature detection, ensuring more efficient code in modern browsers that support them.
+O Vite se destina a navegadores modernos com suporte a ESM nativo por padrão, mas você também pode optar por oferecer suporte a navegadores legacy por meio do [@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/main/packages/plugin-legacy). O plugin gera automaticamente pacotes duplos modern/legacy e oferece o pacote certo com base na detecção de recursos do navegador, garantindo um código mais eficiente em navegadores modernos que os suportam.
 
-## Give it a Try!
+## De uma Chance!
 
-That was a lot of features, but getting started with Vite is simple! You can spin up a Vite-powered app literally in a minute, starting with the following command (make sure you have Node.js >=12):
+Eram muitos recursos, mas começar com o Vite é simples! Você pode ativar um aplicativo com tecnologia Vite literalmente em um minuto, começando com o seguinte comando (certifique-se de ter Node.js >=12):
 
 ```bash
 npm init @vitejs/app
 ```
 
-Then, check out [the guide](https://vitejs.dev/guide/) to see what Vite provides out of the box. You can also check out the source code on [GitHub](https://github.com/vitejs/vite), follow updates on [Twitter](https://twitter.com/vite_js), or join discussions with other Vite users on our [Discord chat server](http://chat.vitejs.dev/).
+Em seguida, verifique [o guia](https://vitejs.dev/guide/) para ver o que o Vite oferece pronto para uso. Você também pode verificar o código-fonte no [GitHub](https://github.com/vitejs/vite), acompanhar as atualizações no [Twitter](https://twitter.com/vite_js) ou participar de discussões com outro usuários do Vite em nosso [servidor no Discord](http://chat.vitejs.dev/).
