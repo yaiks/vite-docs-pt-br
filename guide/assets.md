@@ -3,7 +3,7 @@
 - Relacionado: [Public Base Path](./build#public-base-path)
 - Relacionado: [`assetsInclude` config option](/config/#assetsinclude)
 
-## Improtando Asset como URL
+## Importando Asset como URL
 
 Importando um asset estatico irá retornar uma URL publica:
 
@@ -12,9 +12,9 @@ import imgUrl from './img.png'
 document.getElementById('hero-img').src = imgUrl
 ```
 
-Por exemplo, `imgUrl` será `/img.png` durante o desenvolvimento, e etnão `/assets/img.2d8efhg.png` na build de produção.
+Por exemplo, `imgUrl` será `/img.png` durante o desenvolvimento, e então `/assets/img.2d8efhg.png` na build de produção.
 
-Esse comportamento é similar ao `file-loader` do webpack. A diferença é que a ordem de importação pode ser feita utilizando caminhos absolutos (baseados na razi do projeto durante desenvolvimento) ou caminhos relativos.
+Esse comportamento é similar ao `file-loader` do webpack. A diferença é que a ordem de importação pode ser feita utilizando caminhos absolutos (baseados na raiz do projeto durante desenvolvimento) ou caminhos relativos.
 
 - `url()` referencia no CSS e é tratada da mesma maneira.
 
@@ -22,13 +22,13 @@ Esse comportamento é similar ao `file-loader` do webpack. A diferença é que a
 
 - Imagens comuns, midia e fontes são detectados como assets automaticamente. Você pode extender a lista interna usando a opção [`assetsInclude`](/config/#assetsinclude).
 
-- Assets referenciados são incluidos como parte da construção do grafico assets, terão os nomes de arquivos passados no hash e podem ser processados em puglins para otimização.
+- Assets referenciados são incluídos como parte da construção do gráfico assets, terão os nomes de arquivos passados no hash e podem ser processados em puglins para otimização.
 
-- Assets menores em butes que a opção [`assetsInlineLimit`](/config/#build-assetsinlinelimit) serão colocados inline como URLs base64 data.
+- Assets menores em bytes que a opção [`assetsInlineLimit`](/config/#build-assetsinlinelimit) serão colocados inline como URLs base64 data.
 
 ### Importações com URL Explicitas
 
-Assets que não são incluidos na lista interna ou na `assetsInclude`, podem ser explicitamente importados por uma URL utilizando o sufixo `?url`. Isso é util, por exemplo, para importar [Houdini Paint Worklets](https://houdini.how/usage).
+Assets que não são incluídos na lista interna ou na `assetsInclude`, podem ser explicitamente importados por uma URL utilizando o sufixo `?url`. Isso é util, por exemplo, para importar [Houdini Paint Worklets](https://houdini.how/usage).
 
 ```js
 import workletURL from 'extra-scalloped-border/worklet.js?url'
@@ -70,17 +70,17 @@ Veja [Web Worker section](./features.md#web-workers) para mais detalhes.
 
 Se você tem assets que são:
 
-- Nunca referenciados no codigo fonte (ex. `robots.txt`)
+- Nunca referenciados no código fonte (ex. `robots.txt`)
 - Devem reter o mesmo nome exato de arquivo (sem passar pelo hashing)
 - ...ou você simplesmente não quer quer ter de importar um asset primeiro para obter sua URL
 
-Então você pode colocar o asset em um diretorio especial `public` dentro da pasta raiz do projeto. Assets nesse diretorio são servidos no caminho `/` durante o desenvolvimento, e copiado para a raiz da dist como é.
+Então você pode colocar o asset em um diretório especial `public` dentro da pasta raiz do projeto. Assets nesse diretório são servidos no caminho `/` durante o desenvolvimento, e copiado para a raiz da dist como é.
 
 Os padrões do diretorio `<root>/public`, podem ser configurados pela opção [`publicDir`](/config/#publicdir).
 
 Note que:
 
-- Você deve sempre referenciar assets `public` utilizando caminhos absolutos - por exemplo, `public/icon.png` deve ser referenciado no codigo fonte como`/icon.png`.
+- Você deve sempre referenciar assets `public` utilizando caminhos absolutos - por exemplo, `public/icon.png` deve ser referenciado no código fonte como`/icon.png`.
 - Assets em `public` não podem ser importado pelo JavaScript.
 
 ## nova URL(url, import.meta.url)
@@ -93,9 +93,9 @@ const imgUrl = new URL('./img.png', import.meta.url)
 document.getElementById('hero-img').src = imgUrl
 ```
 
-Isso functiona nativamente em navegadores modernos - na verdade, Vite não precisa processar esse codigo durante desenvolvimento!
+Isso funciona nativamente em navegadores modernos - na verdade, Vite não precisa processar esse código durante desenvolvimento!
 
-Esse padrão também suporta URLs dinamicas via template literals:
+Esse padrão também suporta URLs dinâmicas via template literals:
 
 ```js
 function getImageUrl(name) {
@@ -103,8 +103,8 @@ function getImageUrl(name) {
 }
 ```
 
-Durante a build e produção, Vite vai perfomar as tranformações necessaria para que as URL ainda apontem para os locais corretos mesmo depois do build e hash dos assets.
+Durante a build e produção, Vite vai performar as transformações necessárias para que as URL ainda apontem para os locais corretos mesmo depois do build e hash dos assets.
 
 ::: Nota de perigo: Não funciona com SSR
-Esse padrão não funciona se você esta usando Vite para Server-Side Rendering, porque `import.meta.url` tem diferenças semanticas entre navegadores e Node.js. O servidor não pode determinar as URL do cliente no futuro.
+Esse padrão não funciona se você esta usando Vite para Server-Side Rendering, porque `import.meta.url` tem diferenças semânticas entre navegadores e Node.js. O servidor não pode determinar as URL do cliente no futuro.
 :::
